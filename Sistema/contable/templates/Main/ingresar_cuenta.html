@@ -1,0 +1,131 @@
+{% extends "Base/base.html" %}
+{% block Titulo %}
+Catalogo de cuentas
+{% endblock Titulo %}
+
+{% block JavaScript %}
+    <script type="text/javascript">
+        var bg = document.getElementById('NC');
+        bg.style.display='none';
+        function ocultar() {
+            var bg = document.getElementById('NC');
+            bg.style.display='none';
+            var er = document.getElementById('CC');
+            er.style.display='none';
+        }
+        function mostrar(id) {
+            ocultar();
+            var ec = document.getElementById(id);
+            ec.style.display='block';
+        }
+    </script>
+{% endblock JavaScript %}
+
+
+{% block Contenido %}
+
+<div class="container">
+    <a href="" class="btn btn-primary" data-toggle="modal" data-target="#newTipo"><i class="fas fa-plus"></i>Nuevo tipo cuenta</a>
+    <button class="btn btn-primary" onclick="mostrar('NC')"><i class="fas fa-address-card"></i>Nueva cuenta</button>
+    <button class="btn btn-primary" onclick="mostrar('CC')"><i class="fas fa-address-card"></i>Catalogo de cuenta</button>
+    <div class="modal fade" id="newTipo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Nueva tipo de cuenta</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="">
+                        <input type="hidden" name="action" id="action" value="newCuenta">
+                        {% csrf_token %}
+                        <div class="form-group form-inline">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label id="tipo" class="col-sm-6">Tipo cuenta:</label>
+                                    <select class="form-control col-sm-6" id="tipo" name="tipo" required="">
+                                        <option value="">seleccione</option>
+                                        <option value="A">Activo</option>
+                                        <option value="P">Pasivo</option>
+                                        <option value="C">Capital</option>
+                                        <option value="R">Resultado</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-6">Nombre:</label>
+                                    <input class="form-control col-sm-6" type="text" name="nombret" id="nombret" required="">
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-6"> Grupo cuenta: </label>
+                                    <select class="form-control col-sm-6" id="grupo" required="" name="grupo">
+                                        <option value="">seleccione</option>
+                                        <option value="C">Circulante</option>
+                                        <option value="F">Fijo</option>
+                                        <option value="D">Diferido</option>
+                                        <option value="T">Capital o resultado</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-6">Nombre del grupo: </label>
+                                    <input class="form-control col-sm-6" type="text" required="" name="nombreg" id="nombreg"><br>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-6">Descripcion:</label>
+                                    <input class="form-control col-sm-6" type="text" required="" name="descripciong" id="descripciong">
+                                </div>
+                            </div>
+                            <button class="btn btn-outline-primary mb-4 center" type="submit" name="btn" id="btn">
+                                <i class="fas fa-plus-square"></i> Ingresar tipo de cuenta
+                            </button>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                        class="btn btn-fill btn-danger btn-wd btn-sm" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container" id="NC">
+        <table class="table table-hover">
+            <thead class="titulo-01"><h2 class="text-center">Seleccione el grupo de la nueva cuenta</h2></thead>
+            <thead class="bg-info">
+                <th>Cuenta</th>
+                <th>Accion</th>
+            </thead>
+            {% for t in tipo %}
+            <tr>
+                <td>{{t.nom_grupo}}</td>
+                <td><a href="{% url 'contable:insertCuenta' t.id %}" class="btn-sm btn-outline-success" name="btn" id="btn" ><i class="fas fa-plus-square"></i> Agregar</a> </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+<div class="container" id="CC">
+    <table class="table table-hover">
+        <thead class="titulo-0"><h1 class="text-center">Catalogo de cuentas</h1> </thead>
+        <thead class="bg-info">
+            <th>Codigo cuenta</th>
+            <th>Cuenta</th>
+            <th>Descripcion</th>
+            <th>Cuenta padre</th>
+        </thead>
+        {% for t in tipo %}
+        {% for cuenta in t.cuenta_set.all %}
+        <tr>
+            <td> {{cuenta.codigo_cuenta}} </td>
+            <td> {{cuenta.nom_cuenta}} </td>
+            <td> {{cuenta.descripcion}} </td>
+            <td> {{cuenta.cuenta_padre}} </td>
+        </tr>
+        {% endfor %}
+        {% endfor %}
+    </table><br><br>
+</div>
+{% endblock Contenido %}

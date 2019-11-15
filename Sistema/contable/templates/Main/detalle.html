@@ -1,0 +1,60 @@
+{% extends "Base/base.html" %}
+
+{% block Titulo %}
+Detalle de kardex
+{% endblock Titulo %}
+
+{% block Contenido %}
+
+{% if user.is_authenticated %}
+	<div class="row">
+		<div class="col-sm-12">
+			<h1 class="text-center">Kardex</h1>
+			<p>
+				<div class="col-sm-12">
+					<a href="" class="btn btn-primary" data-toggle="modal" data-target="#newKardex"><i class="fas fa-plus"></i>Nuevo kardex</a>
+				</div>
+			</p>
+		    <div class="modal fade" id="newKardex" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		        <div class="modal-dialog" role="document">
+		            <div class="modal-content">
+		                <div class="modal-header">
+		                    <h5 class="modal-title" id="exampleModalLabel">Nuevo kardex</h5>
+		                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		                        <span aria-hidden="true">&times;</span>
+		                    </button>
+		                </div>
+		                <div class="modal-body">
+		                	<form action="" method="POST">
+								<input type="hidden" name="action" id="action" value="new">
+								{% csrf_token %}
+								<br>
+								<label>Nombre:</label><br>
+								<input type="text" name="nombre" id="nombre" class="form-control" placeholder="nombre del kardex" required=""><br>
+								<label>Inventario:</label><br>
+								<select name="tipo" id="tipo" required="" class="form-control" >
+									<option value="PP">Producto en proceso</option>
+									<option value="PT">Producto Terminado</option>
+								</select><br>
+								<input type="submit" name="btn" id="btn" class="btn btn-primary dropdown-toggle" value="Guardar">
+							</form>
+		                </div>
+		                <div class="modal-footer">
+		                    <button type="button"
+		                        class="btn btn-fill btn-danger btn-wd btn-sm" data-dismiss="modal">Cerrar</button>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		    {% for k in kardex %} 
+		    	<div class="col-md-12 form-inline">
+					<h4 class="col-sm-6">{{k.nombre}}</h4> 
+					<a class="btn btn-info col-sm-2" href="{% url 'contable:CostoPromedio' k.id %}"><i class="fas fa-eye"></i> ver kardex</a>
+	    		</div><br>
+			{% endfor %}
+			
+		</div>
+	</div>
+{% else %}
+{% endif %}
+{% endblock Contenido %}
